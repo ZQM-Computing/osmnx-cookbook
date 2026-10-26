@@ -30,6 +30,14 @@ With `OX_DEMO_PLACE` set, the live section additionally prints the
 live graph's node and edge counts. Those counts are **to confirm at
 validation** for whatever place is eventually sanctioned as the demo.
 
+## Companion file
+
+This directory also contains `build_graph.py`, a companion
+implementation landed separately: it fetches a drivable OSMnx graph
+with retries on transient HTTP statuses and saves portable artifacts.
+It is not part of this pattern's offline assertions; see that file's
+own docstring for its interface.
+
 ## Failure behavior
 
 - `OX_DEMO_PLACE` unset: not an error — the live section skips with a
