@@ -15,7 +15,7 @@ A **OSMnx cookbook** for street networks, routing, and OpenStreetMap graphs in P
 
 ## Repository role and status
 
-**Status:** Active, public — seeding. Pattern passes land in follow-up work from fleet-verified setups; the tables below list what is planned, not what is already written.
+**Status:** Active, public — first executable graph-download pattern written. Offline tests validate graph contracts and route calculations; live geocoding/Overpass behavior still requires a networked run.
 
 **What this repository is:** OSMnx patterns — see the table below.
 
@@ -33,11 +33,11 @@ Geospatial developers who analyze streets, routes, and places from OpenStreetMap
 - Python 3.11+
 - Network access to the Overpass API for live passes
 
-## Patterns (planned)
+## Patterns
 
-| # | Example | What it will demonstrate |
-|---|---------|--------------------------|
-| 01 | `01-graph-from-place` | Building a street-network graph for a place |
+| # | Example | Status | What it demonstrates |
+|---|---------|--------|---------------------|
+| 01 | [01-graph-from-place](examples/01-graph-from-place/README.md) | Written; live provider check pending | Download a drivable graph with bounded transient-HTTP retries and export GraphML plus GeoPackage edges |
 | 02 | `02-routing` | Shortest paths and route attributes on the graph |
 | 03 | `03-overpass-notes` | Handling transient Overpass overloads with delayed retries |
 | 04 | `04-full-workflow` | End-to-end: place → graph → routes → map |
@@ -46,15 +46,19 @@ Geospatial developers who analyze streets, routes, and places from OpenStreetMap
 
 ```text
 osmnx-cookbook/
-├── examples/          # pattern passes, landing in follow-up work
+├── examples/01-graph-from-place/  # graph download/export example
+├── tests/             # offline synthetic graph tests
+├── requirements.txt   # Python dependency bounds
+├── .github/workflows/ # CI
 ├── README.md
 └── LICENSE
 ```
 
 ## Roadmap
 
-- First pattern pass: the first two table rows
-- Second pass: the remaining rows, from fleet-verified setups
+- Add a routing pattern that consumes the saved GraphML artifact.
+- Add provider-independent integration fixtures and document caching/attribution expectations.
+- Only add live Overpass CI if it can be rate-limited and isolated from routine pull requests.
 
 ## Contributing
 
