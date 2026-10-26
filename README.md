@@ -15,7 +15,7 @@ A **OSMnx cookbook** for street networks, routing, and OpenStreetMap graphs in P
 
 ## Repository role and status
 
-**Status:** Active, public — first executable graph-download pattern written. Offline tests validate graph contracts and route calculations; live geocoding/Overpass behavior still requires a networked run.
+**Status:** Active, public. First pattern pass written (design-only, gate 1 target — none runtime-validated on the fleet yet).
 
 **What this repository is:** OSMnx patterns — see the table below.
 
@@ -29,36 +29,35 @@ Geospatial developers who analyze streets, routes, and places from OpenStreetMap
 
 ## Prerequisites
 
-- OSMnx in the fleet Python geo environment
-- Python 3.11+
-- Network access to the Overpass API for live passes
+- OSMnx 2.1.1 in the fleet wave9 Python environment (`C:\geo-tools\wave9-venv` on Node-1 and Node-3; invoke its `Scripts\python.exe` by full path — bare `python` on Node-1 is the hermes-agent venv and must not be used)
+- Network access to the Overpass API for live passes (the offline synthetic-graph sections run without it)
 
 ## Patterns
 
-| # | Example | Status | What it demonstrates |
-|---|---------|--------|---------------------|
-| 01 | [01-graph-from-place](examples/01-graph-from-place/README.md) | Written; live provider check pending | Download a drivable graph with bounded transient-HTTP retries and export GraphML plus GeoPackage edges |
-| 02 | `02-routing` | Shortest paths and route attributes on the graph |
-| 03 | `03-overpass-notes` | Handling transient Overpass overloads with delayed retries |
-| 04 | `04-full-workflow` | End-to-end: place → graph → routes → map |
+| # | Example | What it demonstrates | Status |
+|---|---------|----------------------|--------|
+| 01 | [examples/01-graph-from-place](examples/01-graph-from-place) | Building a street-network graph for a place | Written (design-only) |
+| 02 | [examples/02-routing](examples/02-routing) | Shortest paths and route attributes on the graph | Written (design-only) |
+| 03 | [examples/03-overpass-notes](examples/03-overpass-notes) | Handling transient Overpass overloads with delayed retries | Written (design-only) |
+| 04 | [examples/04-full-workflow](examples/04-full-workflow) | End-to-end: place → graph → routes → map | Written (design-only) |
 
 ## Repository layout
 
 ```text
 osmnx-cookbook/
-├── examples/01-graph-from-place/  # graph download/export example
-├── tests/             # offline synthetic graph tests
-├── requirements.txt   # Python dependency bounds
-├── .github/workflows/ # CI
+├── examples/
+│   ├── 01-graph-from-place/
+│   ├── 02-routing/
+│   ├── 03-overpass-notes/
+│   └── 04-full-workflow/
 ├── README.md
 └── LICENSE
 ```
 
 ## Roadmap
 
-- Add a routing pattern that consumes the saved GraphML artifact.
-- Add provider-independent integration fixtures and document caching/attribution expectations.
-- Only add live Overpass CI if it can be rate-limited and isolated from routine pull requests.
+- First pattern pass: all four table rows (this pass, design-only)
+- Validation pass (gate 3): run each pattern against the fleet OSMnx 2.1.1 environment; confirm the live place-query form and the Overpass retry delays. The live place-query demo scope is an open question (see pattern 01) — no real place is named as the demo until that is settled.
 
 ## Contributing
 
