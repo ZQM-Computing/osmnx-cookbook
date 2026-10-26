@@ -17,6 +17,7 @@ import os
 
 import networkx as nx
 import osmnx as ox
+from build_graph import graph_from_place_with_retry
 
 # Synthetic graph: node id -> (x, y). Edge lengths are hand-set metres,
 # not computed from coordinates, so the totals below are exact.
@@ -47,7 +48,7 @@ def main() -> None:
         print("Live place query skipped: set OX_DEMO_PLACE to a place "
               "query (demo scope pending — see README).")
         return
-    live = ox.graph_from_place(place, network_type="drive")
+    live = graph_from_place_with_retry(place)
     print(f"Live graph for {place!r}: {live.number_of_nodes()} nodes, "
           f"{live.number_of_edges()} edges")
 
