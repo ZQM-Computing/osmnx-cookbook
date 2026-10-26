@@ -96,9 +96,7 @@ def main() -> None:
     else:
         raise SystemExit("Expected the dead fetch to raise")
 
-    calls = 0
     def permanent_failure():
-        nonlocal_placeholder = None
         raise ValueError("invalid query; do not retry")
     try:
         fetch_with_retry(permanent_failure, delays=(0, 0))
