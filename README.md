@@ -15,7 +15,7 @@ A **OSMnx cookbook** for street networks, routing, and OpenStreetMap graphs in P
 
 ## Repository role and status
 
-**Status:** Active, public. First pattern pass written (design-only, gate 1 target — none runtime-validated on the fleet yet).
+**Status:** Active, public. Four example directories exist and the first pattern has offline synthetic-graph tests; no pattern has yet been validated against the live fleet runtime or external geocoding/Overpass services.
 
 **What this repository is:** OSMnx patterns — see the table below.
 
@@ -36,7 +36,7 @@ Geospatial developers who analyze streets, routes, and places from OpenStreetMap
 
 | # | Example | What it demonstrates | Status |
 |---|---------|----------------------|--------|
-| 01 | [examples/01-graph-from-place](examples/01-graph-from-place) | Building a street-network graph for a place | Written (design-only) |
+| 01 | [examples/01-graph-from-place](examples/01-graph-from-place) | Building a street-network graph for a place | Code + offline tests; live query pending |
 | 02 | [examples/02-routing](examples/02-routing) | Shortest paths and route attributes on the graph | Written (design-only) |
 | 03 | [examples/03-overpass-notes](examples/03-overpass-notes) | Handling transient Overpass overloads with delayed retries | Written (design-only) |
 | 04 | [examples/04-full-workflow](examples/04-full-workflow) | End-to-end: place → graph → routes → map | Written (design-only) |
@@ -56,7 +56,8 @@ osmnx-cookbook/
 
 ## Roadmap
 
-- First pattern pass: all four table rows (this pass, design-only)
+- Code pass: all four example directories exist; the first graph helper has offline synthetic tests.
+- Validation pass (gate 3): run each pattern against the fleet OSMnx 2.1.1 environment; verify CLI invocation, output artifacts, and live provider behavior.
 - Validation pass (gate 3): run each pattern against the fleet OSMnx 2.1.1 environment; confirm the live place-query form and the Overpass retry delays. The live place-query demo scope is an open question (see pattern 01) — no real place is named as the demo until that is settled.
 
 ## Contributing
