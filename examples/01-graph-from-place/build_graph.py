@@ -8,8 +8,10 @@ from pathlib import Path
 
 import networkx as nx
 import osmnx as ox
+import requests
 
 RETRYABLE_HTTP_STATUSES = {429, 502, 503, 504}
+RETRYABLE_NETWORK_ERRORS = (requests.exceptions.ConnectionError, requests.exceptions.Timeout)
 
 
 def _http_status(error: Exception) -> int | None:
@@ -20,24 +22,30 @@ def _http_status(error: Exception) -> int | None:
     return status if isinstance(status, int) else None
 
 
+def _is_retryable(error: Exception) -> bool:
+    """Return true only for transient HTTP responses or transport failures."""
+    return _http_status(error) in RETRYABLE_HTTP_STATUSES or isinstance(
+        error, RETRYABLE_NETWORK_ERRORS
+    )
+
+
 def graph_from_place_with_retry(place: str, attempts: int = 3) -> nx.MultiDiGraph:
-    """Retry only known transient HTTP responses; propagate other failures."""
+    """Retry transient Overpass/transport failures; never retry bad input or empty data."""
     if attempts < 1:
         raise ValueError("attempts must be at least 1")
     ox.settings.use_cache = True
-    last_error: Exception | None = None
     for attempt in range(attempts):
         try:
             graph = ox.graph_from_place(place, network_type="drive", simplify=True)
-            validate_graph(graph)
-            return graph
         except Exception as error:
-            if _http_status(error) not in RETRYABLE_HTTP_STATUSES or attempt + 1 == attempts:
+            if not _is_retryable(error) or attempt + 1 == attempts:
                 raise
-            last_error = error
             time.sleep(2**attempt)
-    assert last_error is not None
-    raise last_error
+            continue
+        # Validation failures are local/data-contract failures, not transient network errors.
+        validate_graph(graph)
+        return graph
+    raise RuntimeError("Retry loop exited without a graph or propagated exception")
 
 
 def validate_graph(graph: nx.MultiDiGraph) -> None:
