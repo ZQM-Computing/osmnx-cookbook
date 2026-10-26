@@ -1,8 +1,16 @@
+import importlib.util
 import unittest
+from pathlib import Path
 
 import networkx as nx
 
-from examples.graph_from_place import route_summary, validate_graph
+MODULE_PATH = Path(__file__).parents[1] / "examples" / "01-graph-from-place" / "build_graph.py"
+SPEC = importlib.util.spec_from_file_location("osmnx_example", MODULE_PATH)
+assert SPEC is not None and SPEC.loader is not None
+MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(MODULE)
+route_summary = MODULE.route_summary
+validate_graph = MODULE.validate_graph
 
 
 class GraphExampleTests(unittest.TestCase):
