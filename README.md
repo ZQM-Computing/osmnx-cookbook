@@ -15,7 +15,7 @@ A **OSMnx cookbook** for street networks, routing, and OpenStreetMap graphs in P
 
 ## Repository role and status
 
-**Status:** Active, public. Four example directories exist. Offline tests cover synthetic graph routing and now prove that retries apply only to transient HTTP statuses (429/502/503/504) and network timeouts/connections; live fleet and external-service validation remains pending.
+**Status:** Active, public. Four example directories exist. Offline tests cover synthetic graph routing, prove retries apply only to transient HTTP statuses (429/502/503/504) and network timeouts/connections, and validate the full workflow's GraphML/GeoJSON artifacts; live fleet and external-service validation remains pending.
 
 **What this repository is:** OSMnx patterns — see the table below.
 
@@ -37,9 +37,9 @@ Geospatial developers who analyze streets, routes, and places from OpenStreetMap
 | # | Example | What it demonstrates | Status |
 |---|---------|----------------------|--------|
 | 01 | [examples/01-graph-from-place](examples/01-graph-from-place) | Building a street-network graph for a place | Code + offline tests; live query pending |
-| 02 | [examples/02-routing](examples/02-routing) | Shortest paths and route attributes on the graph | Written (design-only) |
+| 02 | [examples/02-routing](examples/02-routing) | Shortest paths and route attributes on the graph | Synthetic graph assertions |
 | 03 | [examples/03-overpass-notes](examples/03-overpass-notes) | Handling transient Overpass overloads with delayed retries | Offline retry contracts; live API pending |
-| 04 | [examples/04-full-workflow](examples/04-full-workflow) | End-to-end: place → graph → routes → map | Written (design-only) |
+| 04 | [examples/04-full-workflow](examples/04-full-workflow) | End-to-end: place → graph → routes → artifacts | Offline GraphML/GeoJSON artifacts tested |
 
 ## Repository layout
 
@@ -58,6 +58,7 @@ osmnx-cookbook/
 
 - Code pass: four example directories with offline synthetic-graph and retry tests.
 - Validate the transient retry behavior against a controlled Overpass HTTP failure and the live fleet OSMnx 2.1.1 runtime.
+- Run the offline workflow on Windows in the fleet virtual environment and compare GraphML/GeoJSON artifacts against the Ubuntu CI output.
 - Confirm the live place-query scope, artifact paths, and retry delays against the target environment.
 
 ## Contributing
