@@ -56,12 +56,9 @@ osmnx-cookbook/
 
 ## Roadmap
 
-- Code pass: all four example directories exist; the first graph helper has offline synthetic tests.
-- Validate the transient retry behavior against a controlled Overpass HTTP failure and the live fleet OSMnx runtime.
-- Validate the live place-query scope and artifact output paths.
-
-- Validation pass (gate 3): run each pattern against the fleet OSMnx 2.1.1 environment; verify CLI invocation, output artifacts, and live provider behavior.
-- Validation pass (gate 3): run each pattern against the fleet OSMnx 2.1.1 environment; confirm the live place-query form and the Overpass retry delays. The live place-query demo scope is an open question (see pattern 01) — no real place is named as the demo until that is settled.
+- Code pass: four example directories with offline synthetic-graph and retry tests.
+- Validate the transient retry behavior against a controlled Overpass HTTP failure and the live fleet OSMnx 2.1.1 runtime.
+- Confirm the live place-query scope, artifact paths, and retry delays against the target environment.
 
 ## Contributing
 
