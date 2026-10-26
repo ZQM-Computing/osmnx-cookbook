@@ -18,6 +18,24 @@ example: C:\\geo-tools\\wave9-venv\\Scripts\\python.exe run.py
 import os
 import time
 
+import requests
+
+RETRYABLE_HTTP_STATUSES = {429, 502, 503, 504}
+
+
+def _http_status(error):
+    response = getattr(error, "response", None)
+    status = getattr(response, "status_code", None)
+    if status is None:
+        status = getattr(error, "status_code", None)
+    return status if isinstance(status, int) else None
+
+
+def _is_retryable(error):
+    return _http_status(error) in RETRYABLE_HTTP_STATUSES or isinstance(
+        error, (requests.exceptions.ConnectionError, requests.exceptions.Timeout)
+    )
+
 
 def fetch_with_retry(fetch, delays=(30, 120)):
     """Call fetch(); on exception, sleep through delays, then retry.
@@ -30,16 +48,24 @@ def fetch_with_retry(fetch, delays=(30, 120)):
         attempts += 1
         try:
             return fetch(), attempts
-        except Exception as exc:  # noqa: BLE001 - retry wrapper, re-raised below
+        except Exception as exc:  # noqa: BLE001 - inspect and selectively retry
+            if not _is_retryable(exc):
+                raise
             if attempts > len(delays):
                 raise RuntimeError(
-                    f"Fetch failed after {attempts} attempts: {exc}"
+                    f"Retryable fetch failed after {attempts} attempts: {exc}"
                 ) from exc
             time.sleep(delays[attempts - 1])
 
 
+class SyntheticHTTPError(RuntimeError):
+    def __init__(self, status_code, message):
+        super().__init__(message)
+        self.response = type("Response", (), {"status_code": status_code})()
+
+
 class FlakyFetcher:
-    """Fails fail_times times with a 502-style error, then succeeds."""
+    """Fails fail_times times with a synthetic HTTP 502, then succeeds."""
 
     def __init__(self, fail_times):
         self.remaining = fail_times
@@ -49,7 +75,7 @@ class FlakyFetcher:
         self.calls += 1
         if self.remaining > 0:
             self.remaining -= 1
-            raise RuntimeError('Overpass 502 "request queue is full"')
+            raise SyntheticHTTPError(502, 'Overpass 502 "request queue is full"')
         return "OK"
 
 
@@ -69,6 +95,15 @@ def main() -> None:
         assert "after 3 attempts" in str(exc)
     else:
         raise SystemExit("Expected the dead fetch to raise")
+
+    def permanent_failure():
+        raise ValueError("invalid query; do not retry")
+    try:
+        fetch_with_retry(permanent_failure, delays=(0, 0))
+    except ValueError as exc:
+        assert "do not retry" in str(exc)
+    else:
+        raise SystemExit("Expected permanent failure to propagate immediately")
 
 
 if __name__ == "__main__":

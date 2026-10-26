@@ -20,11 +20,13 @@ delays (30 s, then 120 s).
 
 ```text
 Flaky fetch: OK after 3 attempts
-Dead fetch: Fetch failed after 3 attempts: Overpass 502 "request queue is full"
+Dead fetch: Retryable fetch failed after 3 attempts: Overpass 502 "request queue is full"
 ```
 
 The wrapper's rule: attempts = delays + 1. Two delays give three
-attempts, matching the fleet shape (two failures, third succeeds).
+attempts, matching the fleet shape (two failures, third succeeds). Only
+HTTP 429/502/503/504 and requests connection/timeout errors are retried;
+invalid queries and other non-transient errors propagate immediately.
 
 ## Failure behavior
 

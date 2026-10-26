@@ -15,10 +15,14 @@ example: C:\\geo-tools\\wave9-venv\\Scripts\\python.exe run.py
 """
 import json
 import os
+import sys
 from pathlib import Path
 
 import networkx as nx
 import osmnx as ox
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "01-graph-from-place"))
+from build_graph import graph_from_place_with_retry
 
 NODES = {0: (0.0, 0.0), 1: (0.001, 0.0), 2: (0.0, 0.001), 3: (0.001, 0.001)}
 EDGES = [(0, 1, 100), (1, 3, 100), (0, 2, 150), (2, 3, 150), (0, 3, 500)]
@@ -61,7 +65,7 @@ def main() -> None:
     if not place:
         print("Live place section skipped: OX_DEMO_PLACE unset (see pattern 01).")
         return
-    live = ox.graph_from_place(place, network_type="drive")
+    live = graph_from_place_with_retry(place)
     print(f"Live graph for {place!r}: {live.number_of_nodes()} nodes, "
           f"{live.number_of_edges()} edges")
 

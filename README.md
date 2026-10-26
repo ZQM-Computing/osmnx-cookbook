@@ -15,7 +15,7 @@ A **OSMnx cookbook** for street networks, routing, and OpenStreetMap graphs in P
 
 ## Repository role and status
 
-**Status:** Active, public. Four example directories exist and the first pattern has offline synthetic-graph tests; no pattern has yet been validated against the live fleet runtime or external geocoding/Overpass services.
+**Status:** Active, public. Four example directories exist. Offline tests cover synthetic graph routing and now prove that retries apply only to transient HTTP statuses (429/502/503/504) and network timeouts/connections; live fleet and external-service validation remains pending.
 
 **What this repository is:** OSMnx patterns — see the table below.
 
@@ -38,7 +38,7 @@ Geospatial developers who analyze streets, routes, and places from OpenStreetMap
 |---|---------|----------------------|--------|
 | 01 | [examples/01-graph-from-place](examples/01-graph-from-place) | Building a street-network graph for a place | Code + offline tests; live query pending |
 | 02 | [examples/02-routing](examples/02-routing) | Shortest paths and route attributes on the graph | Written (design-only) |
-| 03 | [examples/03-overpass-notes](examples/03-overpass-notes) | Handling transient Overpass overloads with delayed retries | Written (design-only) |
+| 03 | [examples/03-overpass-notes](examples/03-overpass-notes) | Handling transient Overpass overloads with delayed retries | Offline retry contracts; live API pending |
 | 04 | [examples/04-full-workflow](examples/04-full-workflow) | End-to-end: place → graph → routes → map | Written (design-only) |
 
 ## Repository layout
@@ -56,9 +56,9 @@ osmnx-cookbook/
 
 ## Roadmap
 
-- Code pass: all four example directories exist; the first graph helper has offline synthetic tests.
-- Validation pass (gate 3): run each pattern against the fleet OSMnx 2.1.1 environment; verify CLI invocation, output artifacts, and live provider behavior.
-- Validation pass (gate 3): run each pattern against the fleet OSMnx 2.1.1 environment; confirm the live place-query form and the Overpass retry delays. The live place-query demo scope is an open question (see pattern 01) — no real place is named as the demo until that is settled.
+- Code pass: four example directories with offline synthetic-graph and retry tests.
+- Validate the transient retry behavior against a controlled Overpass HTTP failure and the live fleet OSMnx 2.1.1 runtime.
+- Confirm the live place-query scope, artifact paths, and retry delays against the target environment.
 
 ## Contributing
 
