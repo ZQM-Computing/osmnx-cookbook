@@ -38,11 +38,18 @@ def build_graph():
     return graph
 
 
+def shortest_route(graph, origin, destination):
+    """Return shortest path and cost from one single-source Dijkstra pass."""
+    length, path = nx.single_source_dijkstra(
+        graph, origin, target=destination, weight="length"
+    )
+    return path, length
+
+
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     graph = build_graph()
-    path = nx.shortest_path(graph, 0, 3, weight="length")
-    length = nx.shortest_path_length(graph, 0, 3, weight="length")
+    path, length = shortest_route(graph, 0, 3)
     assert path == [0, 1, 3] and length == 200
 
     nx.write_graphml(graph, OUTPUT_DIR / "graph.graphml")
@@ -66,8 +73,7 @@ def main() -> None:
         print("Live place section skipped: OX_DEMO_PLACE unset (see pattern 01).")
         return
     live = graph_from_place_with_retry(place)
-    print(f"Live graph for {place!r}: {live.number_of_nodes()} nodes, "
-          f"{live.number_of_edges()} edges")
+    print(f"Live graph for {place!r}: {live.number_of_nodes()} nodes, {live.number_of_edges()} edges")
 
 
 if __name__ == "__main__":
