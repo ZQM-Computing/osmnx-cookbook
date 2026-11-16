@@ -29,6 +29,8 @@ Geospatial developers who analyze streets, routes, and places from OpenStreetMap
 
 ## Prerequisites
 
+Fleet paths and versions below are a historical snapshot from the Oct 2026 creation wave; verify against the current fleet before use.
+
 - OSMnx 2.1.1 in the fleet wave9 Python environment (`C:\geo-tools\wave9-venv` on Node-1 and Node-3; invoke its `Scripts\python.exe` by full path — bare `python` on Node-1 is the hermes-agent venv and must not be used)
 - Network access to the Overpass API for live passes (the offline synthetic-graph sections run without it)
 
